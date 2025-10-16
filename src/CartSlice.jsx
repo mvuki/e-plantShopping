@@ -6,13 +6,33 @@ export const CartSlice = createSlice({
     items: [], // Initialize items as an empty array
   },
   reducers: {
+
     addItem: (state, action) => {
-    
-    },
+
+    const {name,image,cost} = action.payload; // destructure product details form the actio payload
+   // console.log(" item to be added "+name+" "+cost);
+    const existingItem = state.items.find(item => item.name==name);
+  if(existingItem){
+    existingItem.quantity++;
+// console.log("item "+name+" has been added with qty "+existingItem.quantity);
+  }
+  else{
+    state.items.push({name,image,cost,quantity:1});
+ //console.log("item "+name+" has been added with qty 1");
+  }
+ 
+  },
     removeItem: (state, action) => {
+      state.items = state.items.filter(item => item.name !== action.payload);
+      // should remove the cost to the totals.
     },
     updateQuantity: (state, action) => {
-
+    const { name, quantity } = action.payload; // Destructure the product name and new quantity from the action payload
+    // Find the item in the cart that matches the given name
+    const itemToUpdate = state.items.find(item => item.name === name);
+   if (itemToUpdate) {
+   itemToUpdate.quantity = quantity; // If the item is found, update its quantity to the new value
+  }
     
     },
   },
